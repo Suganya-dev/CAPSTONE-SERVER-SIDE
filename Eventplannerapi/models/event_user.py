@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class EventUser(models.Model):
 
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    userId = models.OneToOneField(User,on_delete=models.CASCADE)
     bio = models.CharField(max_length=100)
-    created_on = models.DateField(auto_now=False, auto_now_add=False)
+    createdOn = models.DateField(auto_now=False, auto_now_add=False)
     active = models.BooleanField(default=None)

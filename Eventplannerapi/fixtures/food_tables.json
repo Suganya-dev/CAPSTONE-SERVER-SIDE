@@ -1,0 +1,26 @@
+[
+    {
+        "model": "Eventplannerapi.foodtable",
+        "pk": 1,
+        "fields": {
+            "label": "Vegetarian brunch",
+            "description":"Brunch for 200 people"
+        }
+    },
+    {
+            "model": "Eventplannerapi.foodtable",
+            "pk": 2,
+            "fields": {
+                "label": "Non-Vegetarian brunch",
+                "description":"Brunch for 200 people"
+            }
+    },
+    {
+        "model": "Eventplannerapi.foodtable",
+        "pk": 3,
+        "fields": {
+            "label": "Vegetarian lunch",
+            "description":"Lunch for 300 people"
+        }
+    }
+]

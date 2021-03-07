@@ -1,0 +1,23 @@
+[
+    {
+        "model": "Eventplannerapi.category",
+        "pk": 1,
+        "fields": {
+            "label": "Wedding Events"
+        }
+    },
+    {
+        "model": "Eventplannerapi.category",
+        "pk": 2,
+        "fields": {
+            "label": "Social Events"
+        }
+    },
+    {
+        "model": "Eventplannerapi.category",
+        "pk": 3,
+        "fields": {
+            "label": "Corporate Events"
+        }
+    }
+]
