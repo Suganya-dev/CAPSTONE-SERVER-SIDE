@@ -1,0 +1,31 @@
+[
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 1,
+        "fields": {
+            "eventsId":1,
+            "foodTableId": 2,      
+            "foodLabel": "Vegetarian brunch"
+        }
+    },
+    
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 2,
+        "fields": {
+            "eventsId":2,
+            "foodTableId": 3,      
+            "foodLabel": "Non-Vegetarian brunch"
+        }
+    },
+    
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 3,
+        "fields": {
+            "eventsId":1,
+            "foodTableId": 2,      
+            "foodLabel": "Vegetarian lunch"
+        }
+    }
+]
