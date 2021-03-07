@@ -1,0 +1,32 @@
+[
+    {
+        "model": "Eventplannerapi.events",
+        "pk": 1,
+        "fields": {
+            "eventUserId": 2,
+            "categoryId": 3,
+            "eventName": "Wedding event",
+            "eventdate": "2019-05-18",
+            "venue": "Pinkerton Park",
+            "numOfGuests": 200,
+            "content": "Marriages are made in heaven",
+            "approved": true
+        }
+    },
+    {
+            "model": "Eventplannerapi.events",
+            "pk": 2,
+            "fields": {
+                "eventUserId": 1,
+                "categoryId": 2,
+                "eventName": "Corporate event",
+                "eventdate": "2015-03-10",
+                "venue": "Willow Park",
+                "numOfGuests": 400,
+                "content": "Corporate events will be professional",
+                "approved": true
+
+            }
+    }
+
+]

@@ -7,6 +7,6 @@ class Events(models.Model):
     eventName = models.CharField(max_length=50)
     eventdate = models.DateField(auto_now=False, auto_now_add=False)
     venue = models.CharField(max_length=70)
-    numOfGuests = models.IntegerField
+    numOfGuests = models.IntegerField(blank=True, null=True)
     content = models.CharField(max_length=100)
     approved = models.BooleanField(default=None)
