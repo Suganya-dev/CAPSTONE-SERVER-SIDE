@@ -12,21 +12,6 @@
             "email": "me@me.com",  
             "is_active": true
         }
-    },
-
-    {
-        "model": "auth.user",
-        "pk": 2,
-        "fields": {
-            "password": "password",
-            "last_login": null,
-            "is_superuser": false,
-            "username": "you@me.com",
-            "first_name": "Taruni",
-            "last_name": "John",
-            "email": "you@me.com",
-            "is_active": true
-
-        }
     }
+
 ]

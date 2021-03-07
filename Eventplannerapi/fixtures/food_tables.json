@@ -4,23 +4,32 @@
         "pk": 1,
         "fields": {
             "label": "Vegetarian brunch",
-            "description":"Brunch for 200 people"
+            "description":"Brunch for 200 people",
+            "seatingArrangements" : "20 Tables, 5 Rows, 225 chairs",
+            "recipes" : "Salads, Greek salad,Tomato basil soup,Veg lasagna",
+            "location" : "Indoor"
         }
     },
     {
-            "model": "Eventplannerapi.foodtable",
-            "pk": 2,
-            "fields": {
-                "label": "Non-Vegetarian brunch",
-                "description":"Brunch for 200 people"
-            }
+        "model": "Eventplannerapi.foodtable",
+        "pk": 2,
+        "fields": {
+            "label": "Non-Vegetarian brunch",
+            "description":"Brunch for 250 people",
+            "seatingArrangements" : "20 Tables, 6 Rows, 265 chairs",
+            "recipes" : "Salads, Chicken salad,Tomato basil soup,lasagna,steak",
+            "location" : "Outdoor"
+        }
     },
     {
         "model": "Eventplannerapi.foodtable",
         "pk": 3,
         "fields": {
-            "label": "Vegetarian lunch",
-            "description":"Lunch for 300 people"
+            "label": "Non-Vegetarian lunch",
+            "description":"Lunch for 300 people",
+            "seatingArrangements" : "30 Tables, 6 Rows, 325 chairs",
+            "recipes" : " Chicken salad,Chicken sandwich,Tomato basil soup,Veg lasagna",
+            "location" : "Outdoor"
         }
     }
 ]

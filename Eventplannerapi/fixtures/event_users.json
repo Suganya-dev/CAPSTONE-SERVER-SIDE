@@ -3,21 +3,12 @@
         "model": "Eventplannerapi.eventuser",
         "pk": 1,
         "fields": {
-            "userId": 1,
+            "user": 1,
             "createdOn": "2020-08-28",
             "active": true,
-            "bio": "Writer of Harry Potter fan fiction. Team Ravenclaw!"
-        }
-    },
-
-    {
-        "model": "Eventplannerapi.eventuser",
-        "pk": 2,
-        "fields": {
-            "userId": 2,
-            "createdOn": "2021-07-15",
-            "active": true,
-            "bio": "Writer of Harry Potter fan fiction. Team Ravenclaw!"
+            "bio": "Events are always special to all"
         }
     }
+
+
 ]
