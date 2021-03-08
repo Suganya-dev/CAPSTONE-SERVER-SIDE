@@ -1,0 +1,31 @@
+[
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 1,
+        "fields": {
+            "events":1,
+            "foodTable": 1    
+           
+        }
+    },
+    
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 2,
+        "fields": {
+            "events":1,
+            "foodTable": 2     
+          
+        }
+    },
+    
+    {
+        "model": "Eventplannerapi.foodplanner",
+        "pk": 3,
+        "fields": {
+            "events":1,
+            "foodTable": 3     
+          
+        }
+    }
+]
