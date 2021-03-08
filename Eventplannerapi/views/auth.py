@@ -61,8 +61,9 @@ def register_user(request):
     # Now save the extra info in the Eventplannerapi_Event_user table
 
     event_user = EventUser.objects.create (
+        user = new_user,
+        bio = "bio pending",
         createdOn = datetime.datetime.today(),
-        userId = new_user,
         active = True
     )
 
