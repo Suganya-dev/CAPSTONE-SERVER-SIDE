@@ -8,6 +8,7 @@ python3 manage.py migrate Eventplannerapi
 python3 manage.py loaddata users
 python3 manage.py loaddata event_users
 python3 manage.py loaddata categories
+python3 manage.py loaddata food_types
 python3 manage.py loaddata food_tables
 python3 manage.py loaddata events
 python3 manage.py loaddata food_planners

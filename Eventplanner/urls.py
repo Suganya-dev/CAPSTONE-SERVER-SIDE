@@ -17,14 +17,16 @@ from django.contrib import admin
 from django.conf.urls import include
 from rest_framework import routers
 from django.urls import path
-# from Eventplannerapi.views import User
-from Eventplannerapi.views import register_user, login_user
+
+# from Eventplannerapi.views import Users
+from Eventplannerapi.views import register_user, login_user,CategoriesView,FoodtypesView
 
 router = routers.DefaultRouter(trailing_slash=False)
-# router.register(r'users', User, 'user')
+# router.register(r'users', Users, 'users')
+router.register(r'categories', CategoriesView, 'category')
+router.register(r'foodtypes', FoodtypesView, 'Foodtypes')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('register', register_user),
     path('login', login_user),
