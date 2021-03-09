@@ -22,6 +22,7 @@ from Eventplannerapi.views import register_user, login_user
 
 router = routers.DefaultRouter(trailing_slash=False)
 # router.register(r'users', User, 'user')
+router.register(r'categories', CategoriesView, 'category')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
