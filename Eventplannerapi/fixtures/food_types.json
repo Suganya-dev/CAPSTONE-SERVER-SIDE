@@ -1,0 +1,30 @@
+[
+    {
+        "model": "Eventplannerapi.foodtype",
+        "pk": 1,
+        "fields": {
+            "foodType": "Veg Brunch(SOFT BOILED EGGS WITH CRISPY AVOCADO FRIES,GRILLED CHEESE POPPY SEEDS WAFFLES WITH BLUEBERRIES,WHOLE WHEAT MUFFINS,MAPLE GRANOLA MADELEINES.)"
+        }
+    },
+    {
+        "model": "Eventplannerapi.foodtype",
+        "pk": 2,
+        "fields": {
+            "foodType": "Non-Veg Brunch(SAUSAGE SANDWICH RECIPES,CHICKEN CASSEROLE,CHICKEN SOUP BACON EGG CUPS,CHICKEN LINGUINI,EGG OMELETTE, ORANGE FRENCH TOAST BAKE,PANCAKES)"
+        }
+    },
+    {
+        "model": "Eventplannerapi.foodtype",
+        "pk": 3,
+        "fields": {
+            "foodType": "Veg Lunch(EGGPLANT PIZZAS, CHEESY CAULIFLOWER PATTIES,ZUCCHINI TOTS,kOREAN CORN CHEESE,ALMOND COOKIES,VEG LASAGNA,STRAWBERRY CUCUMBER SALAD)"
+        }
+    },
+    {
+        "model": "Eventplannerapi.foodtype",
+        "pk": 4,
+        "fields": {
+            "foodType": "Non-Veg Lunch(CREAMY LEMON CHICKEN PASTA,LASAGNA,SHRIMP SCAMPI,CHICKEN ALFREDO,FISH TACOS, SALADS, CHICKEN SANDWICH,STEAK RECIPE,CHIPOTLE CHICKEN)"
+        }
+    }
+]
