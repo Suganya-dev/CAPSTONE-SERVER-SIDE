@@ -1,4 +1,3 @@
-"""View module for handling requests about events"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
@@ -14,7 +13,7 @@ class CategoriesView(ViewSet):
     def create(self, request):
         category = Category()
 
-        category.label = request.data['label']
+        category.label = request.data["label"]
 
         try:
             category.save()
