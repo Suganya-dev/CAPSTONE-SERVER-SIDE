@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
-from rareapi.models import FoodType, FoodTable
+from Eventplannerapi.models import FoodType, FoodTable
 
 class FoodtablesView(ViewSet):
 
@@ -48,8 +48,8 @@ class FoodtablesView(ViewSet):
             #   http://localhost:8000/comments/2
             #
             # The `2` at the end of the route becomes `pk`
-           foodtable  = FoodTable.objects.get(pk=pk),
-            serializer = FoodtableSerializer(comment, context={'request': request})
+            foodtable  = FoodTable.objects.get(pk=pk),
+            serializer = FoodtableSerializer(foodtable, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
