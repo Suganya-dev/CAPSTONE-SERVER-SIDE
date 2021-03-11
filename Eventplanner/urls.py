@@ -20,11 +20,12 @@ from django.urls import path
 
 # from Eventplannerapi.views import Users
 from Eventplannerapi.views import register_user, login_user,CategoriesView,FoodtypesView
-
+from Eventplannerapi.views import FoodtablesView
 router = routers.DefaultRouter(trailing_slash=False)
 # router.register(r'users', Users, 'users')
 router.register(r'categories', CategoriesView, 'category')
 router.register(r'foodtypes', FoodtypesView, 'Foodtypes')
+router.register(r'foodtables', FoodtablesView, 'Foodtables')
 
 urlpatterns = [
     path('', include(router.urls)),
