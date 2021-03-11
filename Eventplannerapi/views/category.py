@@ -14,7 +14,7 @@ class CategoriesView(ViewSet):
     def create(self, request):
         category = Category()
 
-        category.label = request.data['label']
+        category.label = request.data["label"]
 
         try:
             category.save()
