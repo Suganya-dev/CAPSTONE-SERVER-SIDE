@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework import status
 from Eventplannerapi.models import EventUser
 
-class EventusersView(Viewset):
+class EventusersView(ViewSet):
 
     # Handle GET requests for single tag
 
