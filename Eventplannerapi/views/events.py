@@ -25,7 +25,7 @@ class EventsView(ViewSet):
         events.approved = True
         category = Category.objects.get(pk=request.data["category"])
         events.category = category
-        events.user = event_user
+        events.eventUser = event_user
 
         try:
             events.save()
@@ -64,6 +64,25 @@ class EventsView(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for a single comment
+
+        Returns:
+            Response -- 200, 404, or 500 status code
+        """
+        try:
+            events = Events.objects.get(pk=pk)
+            events.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Events.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 class EventuserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -76,16 +95,20 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ("label")
+        fields = ["id","label"]
 
 class EventsSerializer(serializers.ModelSerializer):
 
-    categories = CategorySerializer(many=True)
-    eventusers = EventuserSerializer(many=False)
+    # many=false is for getting single value
+    # many = true is for getting all values
 
-class Meta:
-    model = Events
-    fields = ("id",'eventName','eventdate','venue','numOfGuests','content',
-    'approved','categories','eventusers')
-    # depth = 2
+    category = CategorySerializer(many=False)
+    eventUser = EventuserSerializer(many=False)
 
+    class Meta:
+        model = Events
+        fields = ('id','eventName','eventdate','venue','numOfGuests','content','approved','category','eventUser')
+        # depth = 1
+
+# if the data not in the DB, but we need it in Models,then its called Custom property in models
+#  and custom actions in Views

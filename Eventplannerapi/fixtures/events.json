@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "eventUser": 1,
-            "category": 3,
+            "category": 1,
             "eventName": "Wedding event",
             "eventdate": "2019-05-18",
             "venue": "Pinkerton Park",

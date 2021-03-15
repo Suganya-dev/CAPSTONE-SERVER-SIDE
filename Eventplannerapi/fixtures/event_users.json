@@ -11,4 +11,25 @@
     }
 
 
-]
+]INSERT INTO Eventplannerapi_events (
+    id,
+    eventName,
+    eventdate,
+    venue,
+    numOfGuests,
+    content,
+    approved,
+    category_id,
+    eventUser_id
+  )
+VALUES (
+    id:integer,
+    'eventName:varchar(50)',
+    'eventdate:date',
+    'venue:varchar(70)',
+    numOfGuests:integer,
+    'content:varchar(100)',
+    approved:bool,
+    category_id:integer,
+    eventUser_id:integer
+  );
