@@ -23,7 +23,7 @@ class EventsView(ViewSet):
         events.numOfGuests= request.data["numOfGuests"]
         events.content = request.data["content"]
         events.approved = True
-        category = Category.objects.get(pk=request.data["category"])
+        category = Category.objects.get(pk= request.data["category"])
         events.category = category
         events.eventUser = event_user
 
@@ -63,6 +63,36 @@ class EventsView(ViewSet):
             return Response(serializer.data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+    def update(self, request, pk=None):
+        # Handle PUT requests for a events
+
+        # Do mostly the same thing as POST, but instead of
+        # creating a new instance of events, get the events record
+        # from the database whose primary key is `pk`
+        # leftside has to match models/ right side has to match client(postman)
+        
+        # below line creates a new instance, create a new data in DB, we dont want that in
+        # update fn
+        # events = Events()
+
+        event_user = EventUser.objects.get(user=request.auth.user)
+        events = Events.objects.get(pk=pk)
+        
+        events.eventName = request.data["eventName"]
+        events.eventdate = request.data["eventdate"]
+        events.venue = request.data["venue"]
+        events.numOfGuests = request.data["numOfGuests"]
+        events.content = request.data["content"]
+        events.approved= True
+        category = Category.objects.get(pk= request.data["category"])
+        events.category = category
+        events.eventUser = event_user
+        events.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
     def destroy(self, request, pk=None):

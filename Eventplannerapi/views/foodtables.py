@@ -19,7 +19,7 @@ class FoodtablesView(ViewSet):
         foodtable = FoodTable()
         foodtable.label = request.data["label"]
         foodtable.description = request.data["description"]
-        foodtype = FoodType.objects.get(pk=request.data["foodType"])
+        foodtype = FoodType.objects.get(pk=request.data["foodType_id"])
         foodtable.foodType=foodtype
         
         # Use the Django ORM to get the record from the database
@@ -69,11 +69,13 @@ class FoodtablesView(ViewSet):
         # creating a new instance of foodtable, get the foodtable record
         # from the database whose primary key is `pk`
         # leftside has to match models/ right side has to match client(postman)
+        # below line creates new data in db, ignore that line in update
+        # foodtable = FoodTable()
+        foodtype = FoodType.objects.get(pk=request.data["foodType_id"])
+
         foodtable = FoodTable.objects.get(pk=pk)
-        foodtable = FoodTable()
         foodtable.label = request.data["label"]
         foodtable.description = request.data["description"]
-        foodtype = FoodType.objects.get(pk=request.data["foodType"])
         foodtable.foodType=foodtype
         foodtable.save()
 
