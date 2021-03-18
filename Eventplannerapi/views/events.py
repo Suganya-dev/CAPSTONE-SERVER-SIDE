@@ -6,8 +6,9 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from Eventplannerapi.models import EventUser,Category,Events
+from Eventplannerapi.models import EventUser,Category,Events,FoodTable,FoodPlanner
 from django.contrib.auth.models import User
+from rest_framework.decorators import action
 
 class EventsView(ViewSet):
 
@@ -35,7 +36,52 @@ class EventsView(ViewSet):
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(methods = ['post','delete'], detail =True)
+    # detail = True targetting single data
+    def foodplanner(self,request,pk=None):
 
+        if request.method == "POST":
+
+            events = Events.objects.get(pk=pk)
+            foodTable = FoodTable.objects.get(pk=request.data["foodTableId"])
+            try:
+              foodplanner = FoodPlanner.objects.get(events=events, foodTable=foodTable)
+              return Response(
+                  {'message' : 'This foodplanner is on the Events'},
+                  status = status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+            except FoodPlanner.DoesNotExist:
+                foodplanner = FoodPlanner()
+                foodplanner.events = events
+                foodplanner.foodTable = foodTable
+                foodplanner.save()
+                return Response ({}, status=status.HTTP_201_CREATED)
+
+        elif request.method =="DELETE":
+            try:
+                events = Events.objects.get(pk=pk)
+
+            except Events.DoesNotExist:
+                return Response(
+                    {'message' : "events does not exist."},
+                    status = status.HTTP_400_BAD_REQUEST
+                )
+
+                try:
+                 events = Events.objects.get(pk=pk)
+                 foodTable = FoodTable.objects.get(pk=request.data["foodTableId"])
+                 foodplanner = FoodPlanner.objects.get(events=events, foodTable=foodTable)
+
+                 foodplanner.delete()
+                 return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+                except FoodPlanner.DoesNotExist:
+                    return Response(
+                        {'message': 'Foodplanner is not on the Events'},
+                        status = status.HTTP_404_NOT_FOUND
+                    )
+                    return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            
 
     def list(self,request):
 
@@ -127,6 +173,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ["id","label"]
 
+
 class EventsSerializer(serializers.ModelSerializer):
 
     # many=false is for getting single value
@@ -140,5 +187,21 @@ class EventsSerializer(serializers.ModelSerializer):
         fields = ('id','eventName','eventdate','venue','numOfGuests','content','approved','category','eventUser')
         # depth = 1
 
+
+class FoodtableSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoodTable
+        fields = ('id','label','description')
 # if the data not in the DB, but we need it in Models,then its called Custom property in models
 #  and custom actions in Views
+
+class FoodplannerSerializer(serializers.ModelSerializer):
+
+    events = EventsSerializer(many=True)
+    foodTable = FoodtableSerializer(many=True)
+
+    class Meta:
+        model = FoodPlanner
+        fields = ('id','events','foodTable')
+        depth = 2

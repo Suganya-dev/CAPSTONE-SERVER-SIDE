@@ -3,33 +3,10 @@
         "model": "Eventplannerapi.eventuser",
         "pk": 1,
         "fields": {
-            "user": 1,
+            "user_id": 1,
             "createdOn": "2020-08-28",
             "active": true,
             "bio": "Events are always special to all"
         }
     }
-
-
-]INSERT INTO Eventplannerapi_events (
-    id,
-    eventName,
-    eventdate,
-    venue,
-    numOfGuests,
-    content,
-    approved,
-    category_id,
-    eventUser_id
-  )
-VALUES (
-    id:integer,
-    'eventName:varchar(50)',
-    'eventdate:date',
-    'venue:varchar(70)',
-    numOfGuests:integer,
-    'content:varchar(100)',
-    approved:bool,
-    category_id:integer,
-    eventUser_id:integer
-  );
+]

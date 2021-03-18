@@ -8,6 +8,22 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from Eventplannerapi.models import FoodType, FoodTable
 
+class FoodtypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model= FoodType
+        fields = ('id','label')
+
+class FoodtableSerializer(serializers.ModelSerializer):
+
+    foodType = FoodtypeSerializer
+
+    class Meta:
+        model = FoodTable
+        fields = ('id','label','description','foodType')
+        depth =1
+    
+
 class FoodtablesView(ViewSet):
 
     def create(self, request):
@@ -19,7 +35,7 @@ class FoodtablesView(ViewSet):
         foodtable = FoodTable()
         foodtable.label = request.data["label"]
         foodtable.description = request.data["description"]
-        foodtype = FoodType.objects.get(pk=request.data["foodType_id"])
+        foodtype = FoodType.objects.get(pk=request.data["foodType"])
         foodtable.foodType=foodtype
         
         # Use the Django ORM to get the record from the database
@@ -71,11 +87,11 @@ class FoodtablesView(ViewSet):
         # leftside has to match models/ right side has to match client(postman)
         # below line creates new data in db, ignore that line in update
         # foodtable = FoodTable()
-        foodtype = FoodType.objects.get(pk=request.data["foodType_id"])
-
         foodtable = FoodTable.objects.get(pk=pk)
+
         foodtable.label = request.data["label"]
         foodtable.description = request.data["description"]
+        foodtype = FoodType.objects.get(pk=request.data["foodType"])
         foodtable.foodType=foodtype
         foodtable.save()
 
@@ -84,7 +100,7 @@ class FoodtablesView(ViewSet):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
-    
+       
     def destroy(self, request, pk=None):
 
         try:
@@ -99,11 +115,3 @@ class FoodtablesView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-       
-class FoodtableSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FoodTable
-        fields = ('id','label','description','foodType')
-        depth =1

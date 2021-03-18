@@ -10,3 +10,13 @@ class Events(models.Model):
     numOfGuests = models.IntegerField(blank=True, null=True)
     content = models.CharField(max_length=100)
     approved = models.BooleanField(default=None)
+
+    # defines the virtual property named by the "related_name" in the foodplanner model and Events serializer
+
+    @property
+    def foodTable(self):
+        return self.__foodTable
+
+    @foodTable.setter
+    def foodTable(self,value):
+        self.__foodTable = value

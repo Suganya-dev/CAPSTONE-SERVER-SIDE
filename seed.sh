@@ -7,10 +7,10 @@ python3 manage.py makemigrations Eventplannerapi
 python3 manage.py migrate Eventplannerapi
 python3 manage.py loaddata users
 python3 manage.py loaddata tokens
-python3 manage.py loaddata event_users
 python3 manage.py loaddata categories
 python3 manage.py loaddata food_types
 python3 manage.py loaddata food_tables
+python3 manage.py loaddata event_users
 python3 manage.py loaddata events
 python3 manage.py loaddata food_planners
 
@@ -18,3 +18,5 @@ python3 manage.py loaddata food_planners
 # Place the code below in the file.
 # Run chmod +x seed.sh in the terminal.
 # Then run ./seed.sh in the terminal to run the commands.
+# no dependency table goes first
+# more dependency goes last 
