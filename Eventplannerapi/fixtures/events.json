@@ -3,8 +3,8 @@
         "model": "Eventplannerapi.events",
         "pk": 1,
         "fields": {
-            "eventUser": 1,
-            "category": 1,
+            "eventUser_id": 1,
+            "category_id": 1,
             "eventName": "Wedding event",
             "eventdate": "2019-05-18",
             "venue": "Pinkerton Park",
@@ -17,8 +17,8 @@
             "model": "Eventplannerapi.events",
             "pk": 2,
             "fields": {
-                "eventUser": 1,
-                "category": 2,
+                "eventUser_id": 1,
+                "category_id": 2,
                 "eventName": "Corporate event",
                 "eventdate": "2015-03-10",
                 "venue": "Willow Park",

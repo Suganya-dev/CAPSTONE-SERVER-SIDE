@@ -5,7 +5,7 @@
         "fields": {
             "label": "Vegetarian brunch",
             "description":"Brunch for 200 people",
-            "foodType" : 1
+            "foodType_id" : 1
         }
     },
     {
@@ -14,7 +14,7 @@
         "fields": {
             "label": "Non-Vegetarian brunch",
             "description":"Brunch for 250 people",
-            "foodType" : 2
+            "foodType_id" : 2
 
         }
     },
@@ -24,7 +24,7 @@
         "fields": {
             "label": "Vegetarian lunch",
             "description":"Lunch for 300 people",
-            "foodType" : 3
+            "foodType_id" : 3
 
         }
     }
