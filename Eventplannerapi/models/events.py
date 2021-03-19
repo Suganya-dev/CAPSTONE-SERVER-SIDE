@@ -12,11 +12,13 @@ class Events(models.Model):
     approved = models.BooleanField(default=None)
 
     # defines the virtual property named by the "related_name" in the foodplanner model and Events serializer
-
+    # Self is referring the object/class we are currently in
+    # This code helps to get value
     @property
     def foodTable(self):
         return self.__foodTable
 
+# .setter means it changes the value
     @foodTable.setter
     def foodTable(self,value):
         self.__foodTable = value

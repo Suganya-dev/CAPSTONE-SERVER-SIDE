@@ -14,7 +14,7 @@ class EventsView(ViewSet):
 
     def create(self,request):
         # Handle POST operations
-
+        # the one which user is logged in
         event_user = EventUser.objects.get(user=request.auth.user)
 
         events = Events()
@@ -38,14 +38,15 @@ class EventsView(ViewSet):
 
     @action(methods = ['post','delete'], detail =True)
     # detail = True targetting single data
+    # detail =false It targets whole object
     def foodplanner(self,request,pk=None):
 
         if request.method == "POST":
 
             events = Events.objects.get(pk=pk)
-            foodTable = FoodTable.objects.get(pk=request.data["foodTableId"])
+            food_Table = FoodTable.objects.get(id =request.data["foodtable_id"])
             try:
-              foodplanner = FoodPlanner.objects.get(events=events, foodTable=foodTable)
+              planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
                   {'message' : 'This foodplanner is on the Events'},
                   status = status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -53,13 +54,16 @@ class EventsView(ViewSet):
             except FoodPlanner.DoesNotExist:
                 foodplanner = FoodPlanner()
                 foodplanner.events = events
-                foodplanner.foodTable = foodTable
+                foodplanner.foodTable = food_Table
                 foodplanner.save()
                 return Response ({}, status=status.HTTP_201_CREATED)
 
         elif request.method =="DELETE":
             try:
+               
+                
                 events = Events.objects.get(pk=pk)
+                food_Table = self.request.query_params.get('foodTableId',None)
 
             except Events.DoesNotExist:
                 return Response(
@@ -68,20 +72,22 @@ class EventsView(ViewSet):
                 )
 
                 try:
-                 events = Events.objects.get(pk=pk)
-                 foodTable = FoodTable.objects.get(pk=request.data["foodTableId"])
-                 foodplanner = FoodPlanner.objects.get(events=events, foodTable=foodTable)
+                    planning = FoodPlanner.objects.get( events=events, food_Table=food_Table)
+                    planning.delete()
 
-                 foodplanner.delete()
-                 return Response(None, status=status.HTTP_204_NO_CONTENT)
+                    return Response(None, status=status.HTTP_204_NO_CONTENT)
 
                 except FoodPlanner.DoesNotExist:
                     return Response(
                         {'message': 'Foodplanner is not on the Events'},
                         status = status.HTTP_404_NOT_FOUND
                     )
-                    return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            
+
+                # If the client performs a request other than given methods,It will return this message
+                return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        
+        # method to get all the data from API
+        # Handles GET operation
 
     def list(self,request):
 
@@ -91,24 +97,34 @@ class EventsView(ViewSet):
 
         return Response(serializer.data)
 
+        # method to get Single data from API
+
     def retrieve(self, request, pk=None):
 
-        # event_user = EventUser.objects.get(user=request.auth.user)
+        event_user = EventUser.objects.get(user=request.auth.user)
 
         try:
 
             events= Events.objects.get(pk=pk)
 
-            
-            # if events.user_id ==   event_user.id:
-            #     events.is_current_user = True
-            # else:
-            #     events.is_current_user = False
+            foodtable = FoodTable.objects.filter(foodplanner__events = events)
+
+            jointserializer = FoodtableSerializer(foodtable, many=True, context = {'request':request})
+            print(foodtable.query)
+
+
+            # serializer.data is immutatble,so i made a copy 
+            # many=true, many objects, array of objects
+            # many =false, if you are having one object
 
             serializer = EventsSerializer (events, many=False, context={'request': request})
-            return Response(serializer.data)
+            data = serializer.data
+            data["foodtable"] = jointserializer.data
+            return Response(data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+            
 
     def update(self, request, pk=None):
         # Handle PUT requests for a events
