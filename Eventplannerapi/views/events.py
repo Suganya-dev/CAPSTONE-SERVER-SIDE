@@ -44,9 +44,9 @@ class EventsView(ViewSet):
         if request.method == "POST":
 
             events = Events.objects.get(pk=pk)
-            food_Table = FoodTable.objects.get(id =request.data["foodType_id"])
+            food_Table = FoodTable.objects.get(id =request.data["foodtable_id"])
             try:
-              planning = FoodPlanner.objects.get( events=events, food_Table=food_Table)
+              planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
                   {'message' : 'This foodplanner is on the Events'},
                   status = status.HTTP_422_UNPROCESSABLE_ENTITY)
@@ -101,22 +101,30 @@ class EventsView(ViewSet):
 
     def retrieve(self, request, pk=None):
 
-        # event_user = EventUser.objects.get(user=request.auth.user)
+        event_user = EventUser.objects.get(user=request.auth.user)
 
         try:
 
             events= Events.objects.get(pk=pk)
 
-            
-            # if events.user_id ==   event_user.id:
-            #     events.is_current_user = True
-            # else:
-            #     events.is_current_user = False
+            foodtable = FoodTable.objects.filter(foodplanner__events = events)
+
+            jointserializer = FoodtableSerializer(foodtable, many=True, context = {'request':request})
+            print(foodtable.query)
+
+
+            # serializer.data is immutatble,so i made a copy 
+            # many=true, many objects, array of objects
+            # many =false, if you are having one object
 
             serializer = EventsSerializer (events, many=False, context={'request': request})
-            return Response(serializer.data)
+            data = serializer.data
+            data["foodtable"] = jointserializer.data
+            return Response(data)
         except Exception as ex:
             return HttpResponseServerError(ex)
+
+            
 
     def update(self, request, pk=None):
         # Handle PUT requests for a events
