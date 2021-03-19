@@ -8,16 +8,5 @@
             "active": true,
             "bio": "Keep calm and hire a planner"
         }
-    },
-
-    {
-        "model": "Eventplannerapi.eventuser",
-        "pk": 2,
-        "fields": {
-            "user_id": 1,
-            "createdOn": "2021-05-12",
-            "active": true,
-            "bio": "Planning without action is futile,action without planning is fatal "
-        }
     }
 ]
