@@ -10,11 +10,15 @@ from Eventplannerapi.models import Category
 
 class CategoriesView(ViewSet):
 
+    # Create a new Python instance of the Category class
+    # and set its properties from what was sent in the
+    # body of the request from the client.
     def create(self, request):
         category = Category()
 
         category.label = request.data["label"]
-
+ 
+   # Use the Django ORM to get the record from the database
         try:
             category.save()
             serializer = CategorySerializer(
@@ -24,7 +28,8 @@ class CategoriesView(ViewSet):
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-        # this will handle request for a single category
+    # This method will handle request for a single category
+    # Handle GET requests for single category
 
     def retrieve(self, request, pk=None):
 
@@ -36,6 +41,7 @@ class CategoriesView(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    # Get all category records from the database
     def list(self, request):
 
         categories = Category.objects.all()
@@ -46,16 +52,16 @@ class CategoriesView(ViewSet):
             ordered_posts, many=True, context={'request': request})
         return Response(serializer.data)
 
-            # This will handle the edit of a category
+    # This will handle the edit of a category
 
     def update(self, request, pk=None):
-        """Handle PUT requests for a game
+        """Handle PUT requests for a category
         Returns:
             Response -- Empty body with 204 status code
         """
 
         # Do mostly the same thing as POST, but instead of
-        # creating a new instance of Game, get the game record
+        # creating a new instance of category, get the category record
         # from the database whose primary key is `pk`
         category = Category.objects.get(pk=pk)
         category.label = request.data["label"]
@@ -66,7 +72,7 @@ class CategoriesView(ViewSet):
         # server is not sending back any data in the response
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-    
+    #  Handle DELETE requests for a single category
     def destroy(self, request, pk=None):
 
         try:

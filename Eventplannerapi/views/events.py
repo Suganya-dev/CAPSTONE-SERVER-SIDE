@@ -14,7 +14,7 @@ class EventsView(ViewSet):
 
     def create(self,request):
         # Handle POST operations
-
+        # the one which user is logged in
         event_user = EventUser.objects.get(user=request.auth.user)
 
         events = Events()
@@ -38,6 +38,7 @@ class EventsView(ViewSet):
 
     @action(methods = ['post','delete'], detail =True)
     # detail = True targetting single data
+    # detail =false It targets whole object
     def foodplanner(self,request,pk=None):
 
         if request.method == "POST":
@@ -81,7 +82,9 @@ class EventsView(ViewSet):
                         status = status.HTTP_404_NOT_FOUND
                     )
                     return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-            
+        
+        # method to get all the data from API
+        # Handles GET operation
 
     def list(self,request):
 
@@ -90,6 +93,8 @@ class EventsView(ViewSet):
         serializer = EventsSerializer (events, many=True, context={'request': request})
 
         return Response(serializer.data)
+
+        # method to get Single data from API
 
     def retrieve(self, request, pk=None):
 
