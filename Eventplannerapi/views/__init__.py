@@ -4,3 +4,4 @@ from .foodtypes import FoodtypesView
 from .foodtables import FoodtablesView
 from .eventusers import EventusersView
 from .events import EventsView
+from .users import UsersView

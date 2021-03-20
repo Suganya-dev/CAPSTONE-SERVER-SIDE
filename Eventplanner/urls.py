@@ -18,7 +18,7 @@ from django.conf.urls import include
 from rest_framework import routers
 from django.urls import path
 from Eventplannerapi.views import register_user, login_user,CategoriesView,FoodtypesView
-from Eventplannerapi.views import FoodtablesView,EventusersView,EventsView
+from Eventplannerapi.views import FoodtablesView,EventusersView,EventsView,UsersView
 router = routers.DefaultRouter(trailing_slash=False)
 
 router.register(r'categories', CategoriesView, 'category')
@@ -26,6 +26,7 @@ router.register(r'foodtypes', FoodtypesView, 'Foodtypes')
 router.register(r'foodtables', FoodtablesView, 'Foodtables')
 router.register(r'eventusers', EventusersView, 'Eventusers')
 router.register(r'events', EventsView, 'Events')
+router.register(r'users', UsersView, 'user')
 
 urlpatterns = [
     path('', include(router.urls)),

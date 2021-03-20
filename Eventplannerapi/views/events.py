@@ -44,7 +44,7 @@ class EventsView(ViewSet):
         if request.method == "POST":
 
             events = Events.objects.get(pk=pk)
-            food_Table = FoodTable.objects.get(id =request.data["foodtable_id"])
+            food_Table = FoodTable.objects.get(id =request.data["foodTable_id"])
             try:
               planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
@@ -63,28 +63,27 @@ class EventsView(ViewSet):
                
                 
                 events = Events.objects.get(pk=pk)
-                food_Table = self.request.query_params.get('foodTableId',None)
+                food_Table = self.request.query_params.get('foodTableId', None)
 
             except Events.DoesNotExist:
                 return Response(
-                    {'message' : "events does not exist."},
-                    status = status.HTTP_400_BAD_REQUEST
-                )
+                    {'message' : "event does not exist."},
+                    status = status.HTTP_400_BAD_REQUEST)
 
-                try:
-                    planning = FoodPlanner.objects.get( events=events, food_Table=food_Table)
-                    planning.delete()
+            try:
+                planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
+                planning.delete()
 
-                    return Response(None, status=status.HTTP_204_NO_CONTENT)
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-                except FoodPlanner.DoesNotExist:
-                    return Response(
-                        {'message': 'Foodplanner is not on the Events'},
-                        status = status.HTTP_404_NOT_FOUND
+            except FoodPlanner.DoesNotExist:
+                return Response(
+                    {'message': 'Foodplanner is not on the Events'},
+                    status = status.HTTP_404_NOT_FOUND
                     )
 
-                # If the client performs a request other than given methods,It will return this message
-                return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        # If the client performs a request other than given methods,It will return this message
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
         # method to get all the data from API
         # Handles GET operation
@@ -110,7 +109,7 @@ class EventsView(ViewSet):
             foodtable = FoodTable.objects.filter(foodplanner__events = events)
 
             jointserializer = FoodtableSerializer(foodtable, many=True, context = {'request':request})
-            print(foodtable.query)
+         
 
 
             # serializer.data is immutatble,so i made a copy 
@@ -158,7 +157,7 @@ class EventsView(ViewSet):
 
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single comment
+        """Handle DELETE requests for a single event
 
         Returns:
             Response -- 200, 404, or 500 status code
