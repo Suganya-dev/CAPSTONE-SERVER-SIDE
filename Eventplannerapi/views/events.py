@@ -99,29 +99,49 @@ class EventsView(ViewSet):
         # method to get Single data from API
 
     def retrieve(self, request, pk=None):
+        """Handle GET request for single events
 
-        event_user = EventUser.objects.get(user=request.auth.user)
+        Returns : 
+            REsponse -- JSON serialize instance"""
+
+        # event_user = EventUser.objects.get(user=request.auth.user)
 
         try:
 
             events= Events.objects.get(pk=pk)
+            """
+            SELECT * 
+            FROM FoodTable fT
+            JOIN
+            Foodplanner fP
+            ON fT.id = fP.foodTable_id
+            JOIN 
+            events e
+            ON e.id = fP.events_id
+            WHERE
+            e.id =?
+            """
+            # foodTable__events is from related_name from foodplanner model
+            foodtable = FoodTable.objects.filter(foodTable__events = events)
+            print(foodtable.query)
+            events.foodTable = foodtable
 
-            foodtable = FoodTable.objects.filter(foodplanner__events = events)
+            eventsserializer = EventsSerializer(events, context = {'request':request})
+            return Response(eventsserializer.data)
 
-            jointserializer = FoodtableSerializer(foodtable, many=True, context = {'request':request})
-         
-
-
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+            
             # serializer.data is immutatble,so i made a copy 
             # many=true, many objects, array of objects
             # many =false, if you are having one object
 
-            serializer = EventsSerializer (events, many=False, context={'request': request})
-            data = serializer.data
-            data["foodtable"] = jointserializer.data
-            return Response(data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+        #     serializer = EventsSerializer (events, many=False, context={'request': request})
+        #     data = serializer.data
+        #     data["foodtable"] = joinserializer.data
+        #     return Response(data)
+        # except Exception as ex:
+        #     return HttpResponseServerError(ex)
 
             
 

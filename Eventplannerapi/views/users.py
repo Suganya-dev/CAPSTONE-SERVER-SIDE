@@ -18,8 +18,8 @@ class UsersView(ViewSet):
         # get single users from database
         try:
             user = EventUser.objects.get(pk=pk)
-            serializer = Userserializer(user, context={'request': request})
-            return Repsonse(serializer.data)
+            serializer = UserSerializer(user, context={'request': request})
+            return Response(serializer.data)
 
         except Exception as ex:
             return HttpResponseServerError(ex)
@@ -30,8 +30,8 @@ class UsersView(ViewSet):
 
         # Get all users from the database
         user = EventUser.objects.all()
-        serializers = Userserializer(user, many=True, context = {'request': request})
-        return Response(serializer.data)
+        serializers = UserSerializer(user, many=True, context = {'request': request})
+        return Response(serializers.data)
 
 class UserSerializer(serializers.ModelSerializer):
 
