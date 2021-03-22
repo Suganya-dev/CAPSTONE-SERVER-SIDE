@@ -36,7 +36,7 @@ class EventsView(ViewSet):
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods = ['post','delete'], detail =True)
+    @action(methods = ['get','post','delete'], detail =True)
     # detail = True targetting single data
     # detail =false It targets whole object
     def foodplanner(self,request,pk=None):
@@ -57,6 +57,12 @@ class EventsView(ViewSet):
                 foodplanner.foodTable = food_Table
                 foodplanner.save()
                 return Response ({}, status=status.HTTP_201_CREATED)
+
+        elif request.method == "GET":
+
+            foodPlanner = FoodPlanner.objects.filter(events = pk)
+            serializer = FoodplannerSerializer(foodPlanner,many=True,context={'request': request})
+            return Response (serializer.data)
 
         elif request.method =="DELETE":
             try:
@@ -233,8 +239,8 @@ class FoodtableSerializer(serializers.ModelSerializer):
 
 class FoodplannerSerializer(serializers.ModelSerializer):
 
-    events = EventsSerializer(many=True)
-    foodTable = FoodtableSerializer(many=True)
+    events = EventsSerializer(many=False)
+    foodTable = FoodtableSerializer(many=False)
 
     class Meta:
         model = FoodPlanner
