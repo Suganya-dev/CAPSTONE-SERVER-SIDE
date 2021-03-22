@@ -48,8 +48,8 @@ class EventsView(ViewSet):
             try:
               planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
-                  {'message' : 'This foodplanner is on the Events'},
-                  status = status.HTTP_422_UNPROCESSABLE_ENTITY)
+                  {'message' : 'Add foodplanner to the Events'},
+                  status = status.HTTP_204_NO_CONTENT)
 
             except FoodPlanner.DoesNotExist:
                 foodplanner = FoodPlanner()
@@ -66,8 +66,6 @@ class EventsView(ViewSet):
 
         elif request.method =="DELETE":
             try:
-               
-                
                 events = Events.objects.get(pk=pk)
                 food_Table = self.request.query_params.get('foodTableId', None)
 
@@ -97,6 +95,9 @@ class EventsView(ViewSet):
     def list(self,request):
 
         events = Events.objects.all()
+
+        for event in events:
+            event.foodplanners = FoodPlanner.objects.filter(events=event)
 
         serializer = EventsSerializer (events, many=True, context={'request': request})
 
@@ -215,6 +216,22 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id","label"]
 
 
+class FoodtableSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoodTable
+        fields = ('id','label','description')
+
+
+class FoodplannerSerializer(serializers.ModelSerializer):
+
+    # foodTable = FoodtableSerializer(many=False)
+
+    class Meta:
+        model = FoodPlanner
+        fields = '__all__'
+        depth=1
+
 class EventsSerializer(serializers.ModelSerializer):
 
     # many=false is for getting single value
@@ -222,27 +239,16 @@ class EventsSerializer(serializers.ModelSerializer):
 
     category = CategorySerializer(many=False)
     eventUser = EventuserSerializer(many=False)
+    foodplanners = FoodplannerSerializer(many=True)
 
     class Meta:
         model = Events
-        fields = ('id','eventName','eventdate','venue','numOfGuests','content','approved','category','eventUser')
+        fields = ('id','eventName','eventdate','venue'
+        ,'numOfGuests','content','approved','category','eventUser',
+        'foodplanners')
         # depth = 1
 
 
-class FoodtableSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FoodTable
-        fields = ('id','label','description')
 # if the data not in the DB, but we need it in Models,then its called Custom property in models
 #  and custom actions in Views
 
-class FoodplannerSerializer(serializers.ModelSerializer):
-
-    events = EventsSerializer(many=False)
-    foodTable = FoodtableSerializer(many=False)
-
-    class Meta:
-        model = FoodPlanner
-        fields = ('id','events','foodTable')
-        depth = 2
