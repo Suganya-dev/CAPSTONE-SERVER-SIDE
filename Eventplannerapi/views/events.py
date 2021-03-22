@@ -36,7 +36,7 @@ class EventsView(ViewSet):
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods = ['post','delete'], detail =True)
+    @action(methods = ['get','post','delete'], detail =True)
     # detail = True targetting single data
     # detail =false It targets whole object
     def foodplanner(self,request,pk=None):
@@ -44,12 +44,12 @@ class EventsView(ViewSet):
         if request.method == "POST":
 
             events = Events.objects.get(pk=pk)
-            food_Table = FoodTable.objects.get(id =request.data["foodtable_id"])
+            food_Table = FoodTable.objects.get(id =request.data["foodTable_id"])
             try:
               planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
-                  {'message' : 'This foodplanner is on the Events'},
-                  status = status.HTTP_422_UNPROCESSABLE_ENTITY)
+                  {'message' : 'Add foodplanner to the Events'},
+                  status = status.HTTP_204_NO_CONTENT)
 
             except FoodPlanner.DoesNotExist:
                 foodplanner = FoodPlanner()
@@ -58,33 +58,36 @@ class EventsView(ViewSet):
                 foodplanner.save()
                 return Response ({}, status=status.HTTP_201_CREATED)
 
+        elif request.method == "GET":
+
+            foodPlanner = FoodPlanner.objects.filter(events = pk)
+            serializer = FoodplannerSerializer(foodPlanner,many=True,context={'request': request})
+            return Response (serializer.data)
+
         elif request.method =="DELETE":
             try:
-               
-                
                 events = Events.objects.get(pk=pk)
-                food_Table = self.request.query_params.get('foodTableId',None)
+                food_Table = self.request.query_params.get('foodTableId', None)
 
             except Events.DoesNotExist:
                 return Response(
-                    {'message' : "events does not exist."},
-                    status = status.HTTP_400_BAD_REQUEST
-                )
+                    {'message' : "event does not exist."},
+                    status = status.HTTP_400_BAD_REQUEST)
 
-                try:
-                    planning = FoodPlanner.objects.get( events=events, food_Table=food_Table)
-                    planning.delete()
+            try:
+                planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
+                planning.delete()
 
-                    return Response(None, status=status.HTTP_204_NO_CONTENT)
+                return Response(None, status=status.HTTP_204_NO_CONTENT)
 
-                except FoodPlanner.DoesNotExist:
-                    return Response(
-                        {'message': 'Foodplanner is not on the Events'},
-                        status = status.HTTP_404_NOT_FOUND
+            except FoodPlanner.DoesNotExist:
+                return Response(
+                    {'message': 'Foodplanner is not on the Events'},
+                    status = status.HTTP_404_NOT_FOUND
                     )
 
-                # If the client performs a request other than given methods,It will return this message
-                return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        # If the client performs a request other than given methods,It will return this message
+        return Response({}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
         # method to get all the data from API
         # Handles GET operation
@@ -93,6 +96,9 @@ class EventsView(ViewSet):
 
         events = Events.objects.all()
 
+        for event in events:
+            event.foodplanners = FoodPlanner.objects.filter(events=event)
+
         serializer = EventsSerializer (events, many=True, context={'request': request})
 
         return Response(serializer.data)
@@ -100,29 +106,49 @@ class EventsView(ViewSet):
         # method to get Single data from API
 
     def retrieve(self, request, pk=None):
+        """Handle GET request for single events
 
-        event_user = EventUser.objects.get(user=request.auth.user)
+        Returns : 
+            REsponse -- JSON serialize instance"""
+
+        # event_user = EventUser.objects.get(user=request.auth.user)
 
         try:
 
             events= Events.objects.get(pk=pk)
-
-            foodtable = FoodTable.objects.filter(foodplanner__events = events)
-
-            jointserializer = FoodtableSerializer(foodtable, many=True, context = {'request':request})
+            """
+            SELECT * 
+            FROM FoodTable fT
+            JOIN
+            Foodplanner fP
+            ON fT.id = fP.foodTable_id
+            JOIN 
+            events e
+            ON e.id = fP.events_id
+            WHERE
+            e.id =?
+            """
+            # foodTable__events is from related_name from foodplanner model
+            foodtable = FoodTable.objects.filter(foodTable__events = events)
             print(foodtable.query)
+            events.foodTable = foodtable
 
+            eventsserializer = EventsSerializer(events, context = {'request':request})
+            return Response(eventsserializer.data)
 
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+            
             # serializer.data is immutatble,so i made a copy 
             # many=true, many objects, array of objects
             # many =false, if you are having one object
 
-            serializer = EventsSerializer (events, many=False, context={'request': request})
-            data = serializer.data
-            data["foodtable"] = jointserializer.data
-            return Response(data)
-        except Exception as ex:
-            return HttpResponseServerError(ex)
+        #     serializer = EventsSerializer (events, many=False, context={'request': request})
+        #     data = serializer.data
+        #     data["foodtable"] = joinserializer.data
+        #     return Response(data)
+        # except Exception as ex:
+        #     return HttpResponseServerError(ex)
 
             
 
@@ -158,7 +184,7 @@ class EventsView(ViewSet):
 
 
     def destroy(self, request, pk=None):
-        """Handle DELETE requests for a single comment
+        """Handle DELETE requests for a single event
 
         Returns:
             Response -- 200, 404, or 500 status code
@@ -190,6 +216,22 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id","label"]
 
 
+class FoodtableSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FoodTable
+        fields = ('id','label','description')
+
+
+class FoodplannerSerializer(serializers.ModelSerializer):
+
+    # foodTable = FoodtableSerializer(many=False)
+
+    class Meta:
+        model = FoodPlanner
+        fields = '__all__'
+        depth=1
+
 class EventsSerializer(serializers.ModelSerializer):
 
     # many=false is for getting single value
@@ -197,27 +239,16 @@ class EventsSerializer(serializers.ModelSerializer):
 
     category = CategorySerializer(many=False)
     eventUser = EventuserSerializer(many=False)
+    foodplanners = FoodplannerSerializer(many=True)
 
     class Meta:
         model = Events
-        fields = ('id','eventName','eventdate','venue','numOfGuests','content','approved','category','eventUser')
+        fields = ('id','eventName','eventdate','venue'
+        ,'numOfGuests','content','approved','category','eventUser',
+        'foodplanners')
         # depth = 1
 
 
-class FoodtableSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = FoodTable
-        fields = ('id','label','description')
 # if the data not in the DB, but we need it in Models,then its called Custom property in models
 #  and custom actions in Views
 
-class FoodplannerSerializer(serializers.ModelSerializer):
-
-    events = EventsSerializer(many=True)
-    foodTable = FoodtableSerializer(many=True)
-
-    class Meta:
-        model = FoodPlanner
-        fields = ('id','events','foodTable')
-        depth = 2

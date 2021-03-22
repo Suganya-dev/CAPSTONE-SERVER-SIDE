@@ -15,10 +15,10 @@ class Events(models.Model):
     # Self is referring the object/class we are currently in
     # This code helps to get value
     @property
-    def foodTable(self):
-        return self.__foodTable
+    def foodplanners(self):
+        return self.__foodplanners
 
 # .setter means it changes the value
-    @foodTable.setter
-    def foodTable(self,value):
-        self.__foodTable = value
+    @foodplanners.setter
+    def foodplanners(self,value):
+        self.__foodplanners = value
