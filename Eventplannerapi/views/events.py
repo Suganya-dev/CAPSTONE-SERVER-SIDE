@@ -27,6 +27,7 @@ class EventsView(ViewSet):
         category = Category.objects.get(pk= request.data["category"])
         events.category = category
         events.eventUser = event_user
+        events.foodplanners = []
 
         try:
             events.save()
@@ -147,15 +148,6 @@ class EventsView(ViewSet):
             # serializer.data is immutatble,so i made a copy 
             # many=true, many objects, array of objects
             # many =false, if you are having one object
-
-        #     serializer = EventsSerializer (events, many=False, context={'request': request})
-        #     data = serializer.data
-        #     data["foodtable"] = joinserializer.data
-        #     return Response(data)
-        # except Exception as ex:
-        #     return HttpResponseServerError(ex)
-
-            
 
     def update(self, request, pk=None):
         # Handle PUT requests for a events
