@@ -67,7 +67,7 @@ class EventsView(ViewSet):
         elif request.method =="DELETE":
             try:
                 events = Events.objects.get(pk=pk)
-                food_Table = self.request.query_params.get('foodTableId', None)
+                food_Table = FoodTable.objects.get(id =request.data["foodTable_id"])
 
             except Events.DoesNotExist:
                 return Response(
@@ -95,7 +95,7 @@ class EventsView(ViewSet):
     def list(self,request):
 
         events = Events.objects.all()
-
+    # used for in method
         for event in events:
             event.foodplanners = FoodPlanner.objects.filter(events=event)
 
@@ -226,12 +226,14 @@ class FoodtableSerializer(serializers.ModelSerializer):
 class FoodplannerSerializer(serializers.ModelSerializer):
 
     # foodTable = FoodtableSerializer(many=False)
+    # __all__ represents getting all fields
 
     class Meta:
         model = FoodPlanner
         fields = '__all__'
         depth=1
 
+# included foodplanner in Eventsserializer
 class EventsSerializer(serializers.ModelSerializer):
 
     # many=false is for getting single value
