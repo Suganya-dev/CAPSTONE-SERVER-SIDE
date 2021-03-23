@@ -42,17 +42,22 @@ class EventsView(ViewSet):
     def foodplanner(self,request,pk=None):
 
         if request.method == "POST":
-
+            # it targets the single eventId,foodtableId
             events = Events.objects.get(pk=pk)
             food_Table = FoodTable.objects.get(id =request.data["foodTable_id"])
+            # If the label already exists dont do anything
+            # foodplanner is the join object
             try:
               planning = FoodPlanner.objects.get( events=events, foodTable=food_Table)
               return Response(
                   {'message' : 'Add foodplanner to the Events'},
                   status = status.HTTP_204_NO_CONTENT)
+            # If i want to create new foodplanner which doesn't exist
 
             except FoodPlanner.DoesNotExist:
+                # It creates the blank foodplanner instance just with fields No values
                 foodplanner = FoodPlanner()
+                # It fills the values for the fields
                 foodplanner.events = events
                 foodplanner.foodTable = food_Table
                 foodplanner.save()
