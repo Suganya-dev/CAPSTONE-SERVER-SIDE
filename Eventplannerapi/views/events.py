@@ -67,7 +67,7 @@ class EventsView(ViewSet):
         elif request.method =="DELETE":
             try:
                 events = Events.objects.get(pk=pk)
-                food_Table = self.request.query_params.get('foodTableId', None)
+                food_Table = FoodTable.objects.get(id =request.data["foodTable_id"])
 
             except Events.DoesNotExist:
                 return Response(
